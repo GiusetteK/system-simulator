@@ -1,32 +1,38 @@
 # System Simulator
 
-Console interattiva offline che genera localmente record di telemetria per sistemi immaginari. Non esegue scansioni di rete e non contatta dispositivi reali.
+An offline terminal console that displays locally generated telemetry records for fictional systems. It does not scan networks or connect to real devices.
 
-## Requisiti
-- Python 3.10 o successivo
-- Nessuna dipendenza esterna
+## Requirements
+- Python 3.10 or later
+- No external dependencies
 
-## Avvio
+## Run
+From the repository root:
+
 ```bash
 python3 scripts/system-simulator.py
 ```
 
-All'avvio scegli la lingua dell'interfaccia: Italiano (`it`), English (`en`) o Español (`es`). Puoi anche impostarla direttamente:
+The interface is in English. There is no language prompt or language-switch command.
 
-```bash
-python3 scripts/system-simulator.py --language en
-```
-
-La lingua si può cambiare durante l'esecuzione con `lang it`, `lang en` oppure `lang es`. I comandi restano gli stessi in tutte le lingue; `help` mostra la guida tradotta.
-
-## Comandi
-`help`, `scan`, `list`, `access ID`, `status`, `log`, `clear`, `lang [it|en|es]`, `exit`.
-
-Per regolare la velocità di visualizzazione:
+To adjust scan and animation speed:
 
 ```bash
 python3 scripts/system-simulator.py --interval 0.2 --animation-step 0.08
 ```
 
-## Licenza
-MIT. Consulta [LICENSE](LICENSE).
+## Commands
+Type `help` in the console for detailed descriptions and examples.
+
+| Command | Description |
+| --- | --- |
+| `scan` | Generates a random group of 5 to 15 records. |
+| `list` | Lists the latest group. |
+| `access 003` | Displays a report for a record in the latest group. |
+| `status` | Summarizes statuses, average CPU and signal. |
+| `log` | Shows recent events from the current session. |
+| `clear` | Clears and redraws the console. |
+| `exit` | Closes the program. |
+
+## License
+MIT. See [LICENSE](LICENSE).
