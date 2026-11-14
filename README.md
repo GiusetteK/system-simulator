@@ -1,56 +1,46 @@
 # System Simulator
 
-Simulatore offline da terminale con flusso continuo di telemetria sintetica.
+Console interattiva offline che genera telemetria sintetica per sistemi immaginari, con un'interfaccia terminale in stile cyberpunk.
 
-## Descrizione
-Il programma mostra sistemi immaginari, con colori e layout da dashboard cyberpunk. Ogni record contiene:
-- stato del sistema
-- tipo di dispositivo
-- sistema operativo
-- nodo di appartenenza
-- segnale e ping
-- uptime, CPU e storage
-- memoria e clearance
-- log sintetico
-
-Questi dati sono completamente inventati e generati localmente. Il programma non scansisce reti né contatta dispositivi reali.
+> **Nota:** tutti i dati e le animazioni sono fittizi e locali. Il programma non esegue scansioni di rete e non contatta né accede a dispositivi o sistemi reali.
 
 ## Requisiti
 - Python 3.10 o successivo
 - macOS, Linux o Windows
-- Nessuna libreria esterna
+- Nessuna dipendenza esterna
 
 ## Avvio
+Dalla cartella principale del repository:
+
 ```bash
 python3 scripts/system-simulator.py
 ```
 
-Se vuoi una velocità maggiore del flusso:
+Su Windows, se `python3` non è disponibile:
 
-```bash
-python3 scripts/system-simulator.py --interval 0.2
+```powershell
+py scripts/system-simulator.py
 ```
 
-Se vuoi rallentare l'animazione di ingresso:
+Per regolare la velocità dello scan e dell'animazione:
 
 ```bash
-python3 scripts/system-simulator.py --animation-step 0.08
+python3 scripts/system-simulator.py --interval 0.2 --animation-step 0.08
 ```
-
-## Uso
-- Inserisci un ID del tipo `SYSTEM-003` oppure il numero `3` per vedere le specifiche di quel sistema.
-- Premi **Invio** per continuare con il flusso successivo.
-- Inserisci **R** per generare un altro batch.
-- Inserisci **Q** o premi **Ctrl+C** per uscire.
 
 ## Comandi
-- `help` – mostra i comandi disponibili
-- `scan` – genera un nuovo batch di sistemi
-- `list` – mostra il batch attivo
-- `access 003` – apre i dettagli di un sistema specifico
-- `status` – mostra lo stato del batch attivo
-- `log` – mostra l'ultima cronologia degli eventi
-- `exit` – chiude la simulazione
+Dopo l'avvio, inserisci un comando al prompt:
+
+| Comando | Descrizione |
+| --- | --- |
+| `help` | Mostra i comandi disponibili. |
+| `scan` | Genera e mostra 15 sistemi fittizi. La numerazione continua nei batch successivi. |
+| `list` | Elenca i sistemi del batch attivo. |
+| `access 003` | Mostra l'animazione locale e le specifiche fittizie del sistema selezionato. È possibile usare anche `access SYSTEM-003`. |
+| `status` | Riepiloga stati, CPU media e segnale medio del batch attivo. |
+| `log` | Mostra gli ultimi eventi della sessione. |
+| `clear` | Pulisce il terminale. |
+| `exit` | Chiude il programma. |
 
 ## Licenza
-MIT
+MIT. Consulta il file [LICENSE](LICENSE).

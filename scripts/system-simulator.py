@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Offline cyberpunk security console for fictional system telemetry.
+"""Offline cyberpunk console for fictional system telemetry.
 
-This is a pure local demo. It creates synthetic telemetry and simulates a
-text-based access flow; it never connects to real devices or networks.
+All records and the theatrical access animation are synthetic and local.
+This program does not scan networks, connect to, or access real devices.
 """
 
 from __future__ import annotations
@@ -59,6 +59,7 @@ class Colors:
 
 
 def make_system(number: int) -> System:
+    """Generate a fictional record without querying a device or network."""
     return System(
         system_id=f"SYSTEM-{number:03d}",
         status=random.choice(STATUSES),
@@ -77,51 +78,53 @@ def make_system(number: int) -> System:
     )
 
 
+def timestamp() -> str:
+    return datetime.now().strftime("%H:%M:%S")
+
+
+def record_event(events: list[str], message: str) -> None:
+    events.append(f"[{timestamp()}] {message}")
+
+
 def normalize_system_id(raw: str) -> str:
-    cleaned = raw.strip().upper()
-    if cleaned.isdigit():
-        return f"SYSTEM-{int(cleaned):03d}"
-    return cleaned
+    value = raw.strip().upper()
+    return f"SYSTEM-{int(value):03d}" if value.isdigit() else value
 
 
 def find_system(choice: str, systems: list[System]) -> System | None:
     target = normalize_system_id(choice)
-    for system in systems:
-        if system.system_id == target:
-            return system
-    return None
+    return next((system for system in systems if system.system_id == target), None)
 
 
 def print_banner() -> None:
     print("\n\n\n")
-    print(f"{Colors.CYAN}")
-    print("      ____  _                 _      _            __  __")
-    print("     / ___|| |__   ___   ___ | | ___| |_   _____  \\ \\/ /")
-    print("     \\___ \\| '_ \\ / _ \\ / _ \\| |/ _ \\ __| |_  / _ \\ \\  / ")
-    print("      ___) | | | | (_) | (_) | |  __/ |_  / __/ / /\\ \\ ")
-    print("     |____/|_| |_|\\___/ \\___/|_|\\___|\\__| \\___|/_/  \\_\\")
-    print(f"{Colors.RESET}")
-    print(f"{Colors.YELLOW}LOCAL SECURITY CONSOLE // SYNTHETIC DATA ONLY{Colors.RESET}")
-    print("Nessun accesso reale a dispositivi o reti. Demo locale e fittizia.\n")
+    print(f"{Colors.CYAN}╔══════════════════════════════════════════════════════╗")
+    print("║              S Y S T E M   S I M U L A T O R       ║")
+    print("║          LOCAL SECURITY CONSOLE / OFFLINE           ║")
+    print(f"╚══════════════════════════════════════════════════════╝{Colors.RESET}")
+    print(f"{Colors.YELLOW}SYNTHETIC DATA ONLY — NO REAL SYSTEM ACCESS{Colors.RESET}")
+    print("Tutti i dati e le animazioni sono simulati localmente.\n")
 
 
 def print_help() -> None:
     print(f"{Colors.CYAN}COMANDI DISPONIBILI{Colors.RESET}")
-    print("  help      mostra la lista dei comandi")
-    print("  scan      genera e mostra un nuovo batch di sistemi")
-    print("  access X  apre un sistema specifico (es. access 003 o access SYSTEM-003)")
-    print("  list      mostra i sistemi attualmente in memoria")
-    print("  exit      termina la simulazione")
+    print("  help        mostra i comandi")
+    print("  scan        genera un nuovo batch di 15 sistemi fittizi")
+    print("  list        elenca il batch attivo")
+    print("  access ID   mostra dettagli e animazione demo (es. access 003)")
+    print("  status      riepiloga lo stato del batch attivo")
+    print("  log         mostra gli ultimi 20 eventi simulati")
+    print("  clear       pulisce lo schermo")
+    print("  exit        termina la simulazione")
 
 
 def print_scan_batch(systems: list[System], interval: float) -> None:
     print(f"\n{Colors.CYAN}TIME     SYSTEM       STATUS       NODE   SIGNAL  PING   CPU  STORAGE{Colors.RESET}")
     print("─" * 73)
     for system in systems:
-        timestamp = datetime.now().strftime("%H:%M:%S")
         status_color = Colors.GREEN if system.status == "CONNECTED" else Colors.YELLOW
         print(
-            f"{Colors.BLUE}{timestamp}{Colors.RESET}  "
+            f"{Colors.BLUE}{timestamp()}{Colors.RESET}  "
             f"{Colors.CYAN}{system.system_id:<12}{Colors.RESET} "
             f"{status_color}{system.status:<12}{Colors.RESET} "
             f"{system.node:<6} {system.signal:>3}%   {system.ping:>3}ms "
@@ -129,18 +132,18 @@ def print_scan_batch(systems: list[System], interval: float) -> None:
             flush=True,
         )
         time.sleep(interval)
-    print("\n")
+    print()
 
 
 def print_access_animation(system: System, step_delay: float) -> None:
     print(f"\n{Colors.MAGENTA}╭── ACCESSO SIMULATO: {system.system_id} ──╮{Colors.RESET}")
-    print("│ Nessun dispositivo reale è contattato. │")
+    print("│ Animazione locale: nessun sistema reale contattato. │")
     phases = (
         "Preparazione ambiente demo",
-        "Analisi del sistema fittizio",
-        "Verifica delle credenziali simulate",
-        "Controllo delle autorizzazioni",
-        "Completamento accesso locale",
+        "Caricamento scenario fittizio",
+        "Verifica dei dati sintetici",
+        "Avvio schermata dimostrativa",
+        "Completamento simulazione locale",
     )
     for phase in phases:
         print(f"\n{Colors.BLUE}{phase}...{Colors.RESET}")
@@ -151,7 +154,7 @@ def print_access_animation(system: System, step_delay: float) -> None:
             sys.stdout.flush()
             time.sleep(step_delay)
         print()
-    print(f"{Colors.GREEN}\nACCESSO DEMO COMPLETATO — MODO FICTIZIO{Colors.RESET}\n")
+    print(f"{Colors.GREEN}\nDEMO COMPLETATA — SOLO SIMULAZIONE{Colors.RESET}\n")
 
 
 def print_details(system: System, step_delay: float) -> None:
@@ -168,14 +171,26 @@ def print_details(system: System, step_delay: float) -> None:
     print(f"CPU:             {system.cpu}%")
     print(f"STORAGE USED:    {system.storage}%")
     print(f"MEMORY:          {system.memory}")
-    print(f"CLEARANCE:       LEVEL-{system.clearance}")
-    print(f"LOG:             {system.log}")
-    print(f"{Colors.YELLOW}Questi valori sono inventati e visualizzati solo in simulazione.{Colors.RESET}\n")
+    print(f"CLEARANCE DEMO:  LEVEL-{system.clearance}")
+    print(f"LOG DEMO:        {system.log}")
+    print(f"{Colors.YELLOW}Valori inventati, generati casualmente.{Colors.RESET}\n")
+
+
+def print_status(systems: list[System]) -> None:
+    if not systems:
+        print(f"{Colors.RED}Nessun batch attivo. Esegui 'scan'.{Colors.RESET}")
+        return
+    counts = {status: sum(s.status == status for s in systems) for status in STATUSES}
+    print(f"{Colors.CYAN}STATO BATCH ({len(systems)} sistemi){Colors.RESET}")
+    for status, count in counts.items():
+        print(f"  {status:<12} {count}")
+    print(f"  CPU media    {sum(s.cpu for s in systems) / len(systems):.1f}%")
+    print(f"  Segnale medio {sum(s.signal for s in systems) / len(systems):.1f}%")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Console cyberpunk per telemetria fittizia")
-    parser.add_argument("--interval", type=float, default=0.5, help="secondi tra le righe dello stream")
+    parser = argparse.ArgumentParser(description="Console offline per telemetria fittizia")
+    parser.add_argument("--interval", type=float, default=0.15, help="secondi tra le righe dello scan")
     parser.add_argument("--animation-step", type=float, default=0.08, help="secondi per ogni passo dell'animazione")
     args = parser.parse_args()
     if args.interval <= 0:
@@ -192,14 +207,14 @@ def main() -> None:
 
     next_number = 1
     current_batch: list[System] = []
+    events: list[str] = []
 
     while True:
         try:
-            command = input("\nsecurity-console> ").strip()
+            command = input(f"\n{Colors.GREEN}operator@local-console{Colors.RESET}> ").strip()
         except (EOFError, KeyboardInterrupt):
             print("\nSessione terminata.")
             break
-
         if not command:
             continue
 
@@ -208,41 +223,48 @@ def main() -> None:
 
         if action in ("help", "?"):
             print_help()
-
         elif action in ("scan", "s"):
-            current_batch = [
-                make_system(number)
-                for number in range(next_number, next_number + 15)
-            ]
-            next_number += 15
+            current_batch = [make_system(n) for n in range(next_number, next_number + 15)]
+            next_number += len(current_batch)
+            record_event(events, f"BATCH GENERATO: {len(current_batch)} sistemi")
             print_scan_batch(current_batch, args.interval)
-
         elif action in ("list", "ls"):
             if not current_batch:
-                print(f"{Colors.RED}Nessun batch attivo. Digita 'scan' prima.{Colors.RESET}")
+                print(f"{Colors.RED}Nessun batch attivo. Esegui 'scan'.{Colors.RESET}")
             else:
-                print(f"{Colors.CYAN}BATCH ATTIVO:{Colors.RESET}")
+                print(f"{Colors.CYAN}BATCH ATTIVO{Colors.RESET}")
                 for system in current_batch:
                     print(f"  {system.system_id} | {system.status} | {system.node} | {system.signal}%")
-
         elif action in ("access", "a"):
-            if len(parts) < 2:
+            if len(parts) != 2:
                 print(f"{Colors.RED}Uso: access 003 oppure access SYSTEM-003{Colors.RESET}")
                 continue
             if not current_batch:
-                print(f"{Colors.RED}Nessun batch attivo. Digita 'scan' prima.{Colors.RESET}")
+                print(f"{Colors.RED}Nessun batch attivo. Esegui 'scan'.{Colors.RESET}")
                 continue
-            target = " ".join(parts[1:])
-            system = find_system(target, current_batch)
+            system = find_system(parts[1], current_batch)
             if system is None:
-                print(f"{Colors.RED}Sistema non presente nel batch attuale.{Colors.RESET}")
+                print(f"{Colors.RED}Sistema non presente nel batch attivo.{Colors.RESET}")
+                record_event(events, f"ACCESSO DEMO NON TROVATO: {parts[1]}")
             else:
+                record_event(events, f"ISPEZIONE DEMO: {system.system_id}")
                 print_details(system, args.animation_step)
-
+        elif action == "status":
+            print_status(current_batch)
+            if current_batch:
+                record_event(events, "STATO BATCH VISUALIZZATO")
+        elif action == "log":
+            if not events:
+                print("Nessun evento registrato. Esegui 'scan' per iniziare.")
+            else:
+                print(f"{Colors.CYAN}EVENT LOG — ULTIMI 20 EVENTI{Colors.RESET}")
+                for event in events[-20:]:
+                    print(f"  {event}")
+        elif action == "clear":
+            os.system("cls" if os.name == "nt" else "clear")
         elif action in ("exit", "quit", "q"):
             print("\nChiusura simulazione...")
             break
-
         else:
             print(f"{Colors.RED}Comando non riconosciuto. Digita 'help'.{Colors.RESET}")
 
