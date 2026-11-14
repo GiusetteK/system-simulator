@@ -1,42 +1,51 @@
 # System Simulator
 
-A simple offline terminal demo that generates synthetic telemetry for fictional systems.
+A small offline terminal demo that generates synthetic telemetry for fictional systems.
 
 ## Description
-This project is a local simulation of a system dashboard. It creates fake device data such as:
-- status
-- OS information
-- node placement
-- signal strength
-- ping time
-- uptime
-- CPU usage
-- storage usage
-- memory and clearance level
-- synthetic log messages
+The project displays fictional system records, including status, operating system, node, signal, ping, uptime, CPU, storage, memory, and demo logs. All values are randomly generated locally.
 
-The script is intentionally offline and does not connect to actual devices or networks. It is designed as a playful terminal demo and a good starting point for a first GitHub repository.
+**This is only a simulation.** It does not scan networks, connect to nearby devices, or access real systems.
 
 ## Requirements
-- macOS
-- zsh
-- terminal with color support
+Choose either implementation:
 
-## Run it
+- **Python version:** Python 3.9 or newer; works on macOS, Linux, and Windows. No third-party packages are needed.
+- **zsh version:** zsh; works on macOS and Linux. Windows users can run it through WSL with zsh installed.
+
+## Run the Python version (recommended for cross-platform use)
+From the repository root:
+
+```bash
+python3 scripts/system-simulator.py
+```
+
+On Windows, use:
+
+```powershell
+py scripts/system-simulator.py
+```
+
+If `python3` or `py` is not recognized, install Python 3 from [python.org](https://www.python.org/downloads/) and enable the option to add Python to PATH during installation.
+
+## Run the zsh version
+On macOS or Linux:
+
+```bash
+zsh scripts/system-simulator.zsh
+```
+
+You can also make it executable and run it directly:
+
 ```bash
 chmod +x scripts/system-simulator.zsh
 ./scripts/system-simulator.zsh
 ```
 
-## Features
-- randomized fictional systems
-- dashboard view with real-time-style output
-- detailed per-system inspection
-- demo access animation for encrypted statuses
-- no external dependencies
-
-## Notes
-This is a simulator only. It does not scan nearby devices, access real machines, or interact with networks.
+## Controls
+- Enter an ID such as `SYSTEM-003` or its number, such as `3`, to show details.
+- Enter `R` to generate a new set of fictional systems.
+- Enter `Q` to quit.
 
 ## License
-MIT
+MIT. See [LICENSE](LICENSE).
