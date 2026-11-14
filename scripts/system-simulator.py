@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Offline terminal demo with a continuous stream of fictional telemetry.
+"""Offline terminal simulator for fictional system telemetry.
 
-All records and the simulated system-entry animation are fictional. This
-program does not scan networks, connect to, or access real devices.
+All records and the theatrical entry animation are fictional. This program
+never scans networks, connects to, or accesses real devices.
 """
 
 from __future__ import annotations
@@ -61,7 +61,7 @@ class Colors:
 
 
 def make_system(number: int) -> System:
-    """Create fictional telemetry; no machine or network is queried."""
+    """Generate synthetic telemetry; no device or network is queried."""
     return System(
         system_id=f"SYSTEM-{number:03d}",
         status=random.choice(STATUSES),
@@ -81,17 +81,18 @@ def make_system(number: int) -> System:
 
 
 def print_banner(interval: float) -> None:
-    # A little breathing room makes the launch clearer in the terminal.
-    print("\n\n")
-    print(f"{Colors.CYAN}SIMULATORE DI TELEMETRIA LOCALE{Colors.RESET}")
-    print(f"{Colors.YELLOW}Flusso continuo di dati sintetici e locali.{Colors.RESET}")
-    print("Nessuna scansione o connessione di rete viene eseguita.")
-    print(f"Intervallo: {interval:g} s | Ctrl+C interrompe il programma.\n")
+    print("\n\n\n")
+    print(f"{Colors.CYAN}╔══════════════════════════════════════════════════════╗")
+    print("║              S Y S T E M   S I M U L A T O R       ║")
+    print("║          FICTIONAL TELEMETRY / OFFLINE DEMO         ║")
+    print(f"╚══════════════════════════════════════════════════════╝{Colors.RESET}")
+    print(f"{Colors.YELLOW}LOCAL SIMULATION — NO NETWORK ACCESS — SYNTHETIC DATA{Colors.RESET}")
+    print(f"Intervallo stream: {interval:g}s | Interrompi in qualsiasi momento con Ctrl+C.\n")
 
 
-def print_batch(systems: list[System], interval: float) -> None:
-    print("TIME     SYSTEM       STATUS       NODE   SIGNAL  PING   CPU  STORAGE")
-    print("-" * 73)
+def print_stream_batch(systems: list[System], interval: float) -> None:
+    print(f"{Colors.CYAN}TIME     SYSTEM       STATUS       NODE   SIGNAL  PING   CPU  STORAGE{Colors.RESET}")
+    print("─" * 73)
     for system in systems:
         timestamp = datetime.now().strftime("%H:%M:%S")
         status_color = Colors.GREEN if system.status == "CONNECTED" else Colors.YELLOW
@@ -107,38 +108,50 @@ def print_batch(systems: list[System], interval: float) -> None:
     print()
 
 
-def simulate_demo_entry(system: System) -> None:
-    """Show a theatrical, local-only animation; it performs no access."""
-    print(f"\n{Colors.MAGENTA}INGRESSO SIMULATO — SOLO DEMO{Colors.RESET}")
-    print(f"Avvio ambiente fittizio per {system.system_id}...")
-    for percent in range(0, 101, 10):
-        bar = "#" * (percent // 10) + "." * (10 - percent // 10)
-        sys.stdout.write(f"\rPreparazione demo [{bar}] {percent:3d}%")
-        sys.stdout.flush()
-        time.sleep(0.08)
-    print("\nSessione dimostrativa avviata. Nessun sistema reale è stato contattato.\n")
+def simulate_demo_entry(system: System, step_delay: float) -> None:
+    """Play a deliberately theatrical local animation; it performs no access."""
+    print(f"\n{Colors.MAGENTA}╭── INGRESSO SIMULATO: {system.system_id} ──╮{Colors.RESET}")
+    print("│ Demo locale: nessun dispositivo reale coinvolto. │")
+    phases = (
+        "Preparazione ambiente demo",
+        "Caricamento scenario fittizio",
+        "Verifica dati sintetici",
+        "Avvio schermata dimostrativa",
+        "Completamento animazione locale",
+    )
+    for phase in phases:
+        print(f"\n{Colors.BLUE}{phase}...{Colors.RESET}")
+        for percent in range(0, 101, 5):
+            filled = percent // 10
+            bar = "█" * filled + "░" * (10 - filled)
+            sys.stdout.write(f"\r[{bar}] {percent:3d}%")
+            sys.stdout.flush()
+            time.sleep(step_delay)
+        print()
+    print(f"{Colors.GREEN}\nSESSIONE DEMO PRONTA — SOLO SIMULAZIONE{Colors.RESET}\n")
 
 
-def print_details(system: System) -> None:
-    simulate_demo_entry(system)
-    print(f"{Colors.GREEN}SPECIFICHE FITTIZIE: {system.system_id}{Colors.RESET}")
-    print(f"STATUS: {system.status}")
-    print(f"TYPE: {system.device_type}")
-    print(f"OS: {system.operating_system}")
-    print(f"NODE: {system.node}")
-    print(f"LOCATION: {system.location}")
-    print(f"SIGNAL: {system.signal}%")
-    print(f"PING: {system.ping}ms")
-    print(f"UPTIME: {system.uptime}")
-    print(f"CPU: {system.cpu}%")
-    print(f"STORAGE USED: {system.storage}%")
-    print(f"MEMORY: {system.memory}")
-    print(f"CLEARANCE DEMO: LEVEL-{system.clearance}")
-    print(f"LOG DEMO: {system.log}")
+def print_details(system: System, step_delay: float) -> None:
+    simulate_demo_entry(system, step_delay)
+    print(f"{Colors.GREEN}╭── SPECIFICHE FITTIZIE: {system.system_id} ──╮{Colors.RESET}")
+    print(f"STATUS:          {system.status}")
+    print(f"TYPE:            {system.device_type}")
+    print(f"OS:              {system.operating_system}")
+    print(f"NODE:            {system.node}")
+    print(f"LOCATION:        {system.location}")
+    print(f"SIGNAL:          {system.signal}%")
+    print(f"PING:            {system.ping}ms")
+    print(f"UPTIME:          {system.uptime}")
+    print(f"CPU:             {system.cpu}%")
+    print(f"STORAGE USED:    {system.storage}%")
+    print(f"MEMORY:          {system.memory}")
+    print(f"CLEARANCE DEMO:  LEVEL-{system.clearance}")
+    print(f"LOG DEMO:        {system.log}")
+    print(f"{Colors.YELLOW}Questi valori sono generati casualmente e non descrivono un sistema reale.{Colors.RESET}\n")
 
 
 def find_system(choice: str, systems: list[System]) -> System | None:
-    """Accept SYSTEM-003 or its numeric shorthand, 3."""
+    """Find an ID from the current batch, accepting its numeric suffix too."""
     normalized = choice.strip().upper()
     if normalized.isdigit():
         normalized = f"SYSTEM-{int(normalized):03d}"
@@ -146,33 +159,42 @@ def find_system(choice: str, systems: list[System]) -> System | None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Flusso continuo di telemetria fittizia con dettagli interattivi."
+    parser = argparse.ArgumentParser(description="Flusso continuo di telemetria fittizia.")
+    parser.add_argument(
+        "--interval", type=float, default=0.5,
+        help="secondi tra le righe dello stream (default: 0.5)",
     )
     parser.add_argument(
-        "--interval",
-        type=float,
-        default=0.5,
-        help="secondi tra le righe del flusso (default: 0.5)",
+        "--animation-step", type=float, default=0.04,
+        help="durata di ogni passo dell'animazione (default: 0.04; valore maggiore = più lenta)",
     )
     args = parser.parse_args()
     if args.interval <= 0:
         parser.error("--interval deve essere maggiore di zero")
+    if args.animation_step <= 0:
+        parser.error("--animation-step deve essere maggiore di zero")
     return args
 
 
 def main() -> None:
     args = parse_args()
     print_banner(args.interval)
+    next_number = 1
+    batch_size = 15
 
     try:
         while True:
-            # Each batch contains 15 fictional systems, then offers interaction.
-            systems = [make_system(number) for number in range(1, 16)]
-            print_batch(systems, args.interval)
+            # Keep IDs increasing across batches and after each detail inspection.
+            systems = [
+                make_system(number)
+                for number in range(next_number, next_number + batch_size)
+            ]
+            next_number += batch_size
+
+            print_stream_batch(systems, args.interval)
             choice = input(
-                "ID/numero per specifiche e ingresso demo, Invio per continuare, "
-                "R per nuovi dati, Q per uscire: "
+                "ID/numero per specifiche e ingresso demo | Invio continua | "
+                "R nuovi dati | Q esci: "
             ).strip()
 
             if choice.upper() == "Q":
@@ -182,11 +204,13 @@ def main() -> None:
 
             system = find_system(choice, systems)
             if system is None:
-                print(f"\n{Colors.RED}Sistema non riconosciuto.{Colors.RESET}")
-            else:
-                print_details(system)
-            input("\nPremi Invio per riprendere il flusso...")
-            print("\n")
+                print(f"\n{Colors.RED}ID non presente nell'ultimo batch. Scegline uno dalla lista.{Colors.RESET}")
+                time.sleep(1.5)
+                continue
+
+            print_details(system, args.animation_step)
+            input("Premi Invio per riprendere il flusso...")
+            print("\n\n")
     except (KeyboardInterrupt, EOFError, BrokenPipeError):
         pass
 

@@ -1,32 +1,47 @@
 # System Simulator
 
-A small offline terminal demo that generates synthetic telemetry for fictional systems.
+Simulatore offline da terminale con flusso continuo di telemetria sintetica per sistemi immaginari.
 
-## Description
-The project displays fictional system records, including status, operating system, node, signal, ping, uptime, CPU, storage, memory, and demo logs. All values are randomly generated locally.
+## Avviso
+Tutti i dati sono inventati. Il programma non esegue scansioni, non si connette alla rete e non accede a dispositivi o sistemi reali. L'animazione di "ingresso" è una semplice sequenza grafica locale.
 
-**This is only a simulation.** It does not scan networks, connect to nearby devices, or access real systems. The demo-entry animation is purely text-based and local.
+## Requisiti
+- Python 3.10 o successivo
+- macOS, Linux o Windows
+- Nessuna libreria esterna
 
-## Requirements
-- Python 3.10 or newer
-- macOS, Linux, or Windows with Python installed
+## Avvio
+Dalla cartella del repository:
 
-## Run it
 ```bash
 python3 scripts/system-simulator.py
 ```
 
-For a faster stream:
+Su Windows, se `python3` non è disponibile:
+
+```powershell
+py scripts/system-simulator.py
+```
+
+Per regolare il flusso (intervallo in secondi tra le righe):
 
 ```bash
 python3 scripts/system-simulator.py --interval 0.2
 ```
 
-## Controls
-- Enter an ID such as `SYSTEM-003` or `3` to view synthetic details and the simulated access animation.
-- Press `Enter` to continue with another batch.
-- Enter `R` to regenerate the data.
-- Enter `Q` or press `Ctrl+C` to quit.
+Per rallentare l'animazione demo, aumentando il tempo per ogni passo:
 
-## License
-MIT
+```bash
+python3 scripts/system-simulator.py --animation-step 0.08
+```
+
+## Uso
+Il programma mostra 15 sistemi per batch. I loro numeri continuano a crescere anche dopo un'ispezione: ad esempio, il batch successivo parte da `SYSTEM-016` invece di tornare a `SYSTEM-001`.
+
+- Inserisci un ID mostrato (ad esempio `SYSTEM-003`) o il suo numero (`3`) per vedere le specifiche fittizie e l'animazione di ingresso.
+- Premi **Invio** per proseguire con il batch successivo.
+- Scrivi **R** per generare subito un nuovo batch (la numerazione continua).
+- Scrivi **Q** o premi **Ctrl+C** per uscire.
+
+## Licenza
+MIT. Consulta [LICENSE](LICENSE).
