@@ -96,6 +96,14 @@ def find_system(choice: str, systems: list[System]) -> System | None:
     return next((system for system in systems if system.system_id == target), None)
 
 
+def clear_screen() -> None:
+    """Clear a real terminal without printing escape codes into redirected output."""
+    if not sys.stdout.isatty():
+        return
+    sys.stdout.write("\033[2J\033[H")
+    sys.stdout.flush()
+
+
 def print_banner() -> None:
     print("\n\n\n")
     print(f"{Colors.CYAN}╔══════════════════════════════════════════════════════╗")
@@ -109,7 +117,7 @@ def print_banner() -> None:
 def print_help() -> None:
     print(f"{Colors.CYAN}COMANDI DISPONIBILI{Colors.RESET}")
     print("  help        mostra i comandi")
-    print("  scan        genera un nuovo batch di 15 sistemi fittizi")
+    print("  scan        genera un nuovo batch di 5-15 sistemi fittizi")
     print("  list        elenca il batch attivo")
     print("  access ID   mostra dettagli e animazione demo (es. access 003)")
     print("  status      riepiloga lo stato del batch attivo")
@@ -184,7 +192,7 @@ def print_status(systems: list[System]) -> None:
     print(f"{Colors.CYAN}STATO BATCH ({len(systems)} sistemi){Colors.RESET}")
     for status, count in counts.items():
         print(f"  {status:<12} {count}")
-    print(f"  CPU media    {sum(s.cpu for s in systems) / len(systems):.1f}%")
+    print(f"  CPU media     {sum(s.cpu for s in systems) / len(systems):.1f}%")
     print(f"  Segnale medio {sum(s.signal for s in systems) / len(systems):.1f}%")
 
 
@@ -202,6 +210,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    clear_screen()
     print_banner()
     print_help()
 
@@ -220,19 +229,26 @@ def main() -> None:
 
         parts = command.split()
         action = parts[0].lower()
+        # Keep each command's result on a fresh screen, then redraw the console header.
+        clear_screen()
+        print_banner()
 
         if action in ("help", "?"):
             print_help()
         elif action in ("scan", "s"):
-            current_batch = [make_system(n) for n in range(next_number, next_number + 15)]
-            next_number += len(current_batch)
+            batch_size = random.randint(5, 15)
+            current_batch = [
+                make_system(number)
+                for number in range(next_number, next_number + batch_size)
+            ]
+            next_number += batch_size
             record_event(events, f"BATCH GENERATO: {len(current_batch)} sistemi")
             print_scan_batch(current_batch, args.interval)
         elif action in ("list", "ls"):
             if not current_batch:
                 print(f"{Colors.RED}Nessun batch attivo. Esegui 'scan'.{Colors.RESET}")
             else:
-                print(f"{Colors.CYAN}BATCH ATTIVO{Colors.RESET}")
+                print(f"{Colors.CYAN}BATCH ATTIVO ({len(current_batch)} sistemi){Colors.RESET}")
                 for system in current_batch:
                     print(f"  {system.system_id} | {system.status} | {system.node} | {system.signal}%")
         elif action in ("access", "a"):
@@ -261,7 +277,8 @@ def main() -> None:
                 for event in events[-20:]:
                     print(f"  {event}")
         elif action == "clear":
-            os.system("cls" if os.name == "nt" else "clear")
+            # The screen is already clear; this command leaves a fresh console ready.
+            print_help()
         elif action in ("exit", "quit", "q"):
             print("\nChiusura simulazione...")
             break
